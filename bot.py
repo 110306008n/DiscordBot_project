@@ -3,7 +3,7 @@ from http import client
 from typing import AsyncIterable
 import discord
 import json
-import random
+import os
 from discord.ext import commands
 
 #mode=read      utf8 could encode chinese
@@ -23,41 +23,29 @@ async def on_ready():
     print(">>Bot is online")
     
 
-@bot.event
-async def on_member_join(member):
-    #convert from String to int data type
-    channel=bot.get_channel(int(jdata["Welcome_channel"]))
-    channel_2=bot.get_channel(int(jdata["General_channel"]))
-    print(">>member_join")
-    await channel.send(f"{member}join!")
-    await channel_2.send(f"{member}join!")
-
-@bot.event
-async def on_member_remove(member):
-    channel=bot.get_channel(int(jdata["Leave_channel"]))
-    channel_2=bot.get_channel(int(jdata["General_channel"]))
-    print(">>member_leave")
-    await channel_2.send(f"{member}leave!")
+@bot.command()
+async def load(ctx, extension):
+    bot.load_extension(F"cmds.{extension}")
+    await ctx.send(F"Loaded{extension} done.")
 
 @bot.command()
-# fuction name is the commmand line u have to type
-#ctx = the word before and after 
-#eg: 
-#A:hi   (before)    feature(Id. server, channel, etc)
-#B:LOL  (after)     read the feature above to let the bot know where should bot send msg
-async def ping(ctx):
-    await ctx.send(f"{round(bot.latency*1000, 2)}ms")
+async def unload(ctx, extension):
+    bot.unload_extension(F"cmds.{extension}")
+    await ctx.send(F"Unloaded{extension} done.")
 
 @bot.command()
-async def rPic(ctx):
-    random_pic=random.choice(jdata["Pic"])
-    pic=discord.File(random_pic)
-    await ctx.send(file=pic)
+async def reload(ctx, extension):
+    bot.reload_extension(F"cmds.{extension}")
+    await ctx.send(F"Reloaded{extension} done.")
 
-@bot.command()
-async def wPic(ctx):
-    random_pic=random.choice(jdata["wPic"])
-    await ctx.send(random_pic)
-
-#json resourses are 字典
-bot.run(jdata["TOKEN"])
+#list all the file under folder cmds
+for Filename in os.listdir("./cmds"):
+    #only import python file
+    if Filename.endswith(".py"):
+        #output from first to the last three
+        #eg: main.py ---> main 
+        bot.load_extension(F"cmds.{Filename[:-3]}")
+        
+if __name__ == "__main__":
+    #json resourses are 字典
+    bot.run(jdata["TOKEN"])
