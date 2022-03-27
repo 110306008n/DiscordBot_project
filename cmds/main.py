@@ -31,5 +31,19 @@ class Main(Cog_Extention):
         embed.set_footer(text="footer")
         await ctx.send(embed=embed)
 
+    @commands.command()
+    async def sayd(self, ctx, *msg):
+        #delete the original message
+        await ctx.message.delete()
+        await ctx.send(msg)
+
+    @commands.command()
+    async def clean(self, ctx, num:int):
+        #skip the convert num to int 
+        await ctx.channel.purge(limit=num+1)
+        #clean include the commmand line (!clean num)
+        #limit=num+1
+        await ctx.send(f"clean {num} messages")
+
 def setup(bot):
     bot.add_cog(Main(bot))
