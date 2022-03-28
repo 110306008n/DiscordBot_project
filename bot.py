@@ -47,5 +47,5 @@ for Filename in os.listdir("./cmds"):
         bot.load_extension(F"cmds.{Filename[:-3]}")
         
 if __name__ == "__main__":
-    #json resourses are 字典
+    n=int(50)
     bot.run(jdata["TOKEN"])
