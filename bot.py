@@ -47,6 +47,4 @@ for Filename in os.listdir("./cmds"):
         bot.load_extension(F"cmds.{Filename[:-3]}")
         
 if __name__ == "__main__":
-
-    m=int(50)
     bot.run(jdata["TOKEN"])
